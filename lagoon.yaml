@@ -2,7 +2,7 @@ name: testEnvironment
 version: 1.2.3
 
 components:
-  lagoon-platform/aws-provider: 1.2.3
+  lagoon-platform/aws-provider: 0.0.1
 
 docker:
   docker1: "initial_docker1"
@@ -29,11 +29,4 @@ nodes:
 
     instances: 3
     labels:
-      - lagoon
-
-stacks:
-  monitoring:
-    repository: github.com/lagoon-platform/aws-provider
-    version: 1.2.3
-    deployOn:
       - lagoon
