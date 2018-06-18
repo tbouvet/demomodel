@@ -4,6 +4,28 @@ version: 1.2.3
 components:
   lagoon-platform/aws-provider: 1.2.3
 
+orchestrator:
+  name: swarm
+  params:
+    log-driver: json-file
+    log-opts: 
+      max-size: "20m"
+      max-file: "3"
+    disable-legacy-registry: true
+    userland-proxy: true
+    live-restore: false
+    hosts: 
+    - "unix:///var/run/docker.sock"
+    - "tcp://0.0.0.0:2376"
+    tls: true
+    tlscacert: "/etc/docker/certs/ca.pem"
+    tlscert: "/etc/docker/certs/cert.pem"
+    tlskey: "/etc/docker/certs/key.pem"
+    tlsverify: true 
+
+  repository: lagoon-platform/swarm-provider
+  version: 1.2.3
+
 providers:
   aws:
     repository: lagoon-platform/aws-provider
@@ -61,23 +83,7 @@ nodes:
             - 4789 
             cidr_ip: 0.0.0.0/0
             rule_desc: overlay network traffic 
-    docker:
-      log-driver: json-file
-      log-opts: 
-        max-size: "20m"
-        max-file: "3"
-      disable-legacy-registry: true
-      userland-proxy: true
-      live-restore: false
-      hosts: 
-      - "unix:///var/run/docker.sock"
-      - "tcp://0.0.0.0:2376"
-      tls: true
-      tlscacert: "/etc/docker/certs/ca.pem"
-      tlscert: "/etc/docker/certs/cert.pem"
-      tlskey: "/etc/docker/certs/key.pem"
-      tlsverify: true 
-
+     
     instances: 3
     labels:
       - lagoon
