@@ -1,16 +1,14 @@
 name: testEnvironment
 version: 1.2.3
 
-components:
-  lagoon-platform/aws-provider: 0.0.1
-
-lagoonPlatform:
-  repository: lagoon-platform/lagoon
-  version: 1.2.3
+lagoon:
+  components:
+    lagoon-platform/aws-provider: alpha1
+    lagoon-platform/swarm-orchestrator: alpha1
 
 orchestrator:
   name: swarm
-  params:
+  docker:
     log-driver: json-file
     log-opts: 
       max-size: "20m"
@@ -27,8 +25,8 @@ orchestrator:
     tlskey: "/etc/docker/certs/key.pem"
     tlsverify: true 
 
-  repository: tbouvet/swarm-orchestrator
-  version: 1.2.3
+  repository: lagoon-platform/swarm-orchestrator
+  
 
 providers:
   aws:
@@ -38,8 +36,25 @@ providers:
 
 nodes:
   managers:
+        
     provider:
       name: aws
+      volumes:
+        - name: /data1
+          params:
+            device_name: xvdf
+            volume_type: gp2
+            volume_size: 9
+            delete_on_termination: true
+        - name: /var/lib/docker
+          params:
+            device_name: xvdg
+            volume_type: standard
+            volume_size: 1
+            delete_on_termination: true
+            tags:
+              Type: Docker 
+              TestTagKey: TestTagValue
       params:
         instance_type: "t2.micro"
         ami_id: "ami-f90a4880"
@@ -92,10 +107,5 @@ nodes:
     labels:
       - lagoon
 
-stacks:
-  monitoring:
-    repository: github.com/lagoon-platform/aws-provider
-    version: 1.2.3
-    deployOn:
-      - lagoon
+
 
