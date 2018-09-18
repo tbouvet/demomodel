@@ -1,0 +1,98 @@
+name: testEnvironment
+version: 1.2.3
+
+lagoon:
+  components:
+    aws:
+      repository: tbouvet/aws-provider
+      version: custom-config
+    swarm:
+      repository: tbouvet/swarm-orchestrator
+      version: proxy
+    stack1:
+      repository: lagoon-platform/swarm-orchestrator
+      version: alpha1
+
+orchestrator:
+  component: swarm
+  docker:
+    params:
+      log-driver: json-file
+      log-opts: 
+        max-size: "20m"
+        max-file: "3"
+      disable-legacy-registry: true
+      userland-proxy: true
+      live-restore: false
+      hosts: 
+      - "unix:///var/run/docker.sock"
+      - "tcp://0.0.0.0:2376"
+      tls: true
+      tlscacert: "/etc/docker/certs/ca.pem"
+      tlscert: "/etc/docker/certs/cert.pem"
+      tlskey: "/etc/docker/certs/key.pem"
+      tlsverify: true 
+      registry-mirrors:
+      - "https://repository.inetpsa.com/"
+      
+    registries:
+      repository.inetpsa.com:
+        certificate: {{ .repository_cert }}
+        username: {{ .docker_username }}
+        password: {{ .docker_password }}
+
+
+providers:
+  aws:
+    component: aws
+    params:
+      region: "eu-central-1"
+      assign_public_ip: False
+    proxy:
+      http_proxy: {{ .proxy_http }}
+      https_proxy: {{ .proxy_https }}
+      no_proxy: {{ .proxy_no }}
+    env:
+      AWS_REGION: {{ .aws_region }}
+      AWS_ACCESS_KEY_ID: {{ .aws_access_key_id }}
+      AWS_SECRET_ACCESS_KEY: {{ .aws_access_key }}
+
+
+nodes:
+  managers:
+    instances: 1
+    
+    provider:
+      name: aws
+      params:
+        instance_type: "m5.4xlarge"
+        ami_id: "ami-027583e616ca104df"
+        vpc_id: "vpc-950d16fd"
+        vpc_subnet_id: "subnet-0410bf6f"
+        assign_public_ip: False
+        instance_tags:
+          psa_reflex_name: noreflex
+        region: "eu-central-1"
+    volumes:
+    - path: /users
+      device_name: nvme1n1
+      params:
+        device_name: xvdf
+        volume_type: gp2
+        volume_size: 200
+        delete_on_termination: true
+    - path: /var/lib/docker
+      device_name: nvme2n1
+      params:
+        device_name: xvdg
+        volume_type: gp2
+        volume_size: 100
+        delete_on_termination: true
+        tags:
+          Type: Docker
+
+stacks:
+  stack1:
+    component: stack1
+    on:
+    - managers
