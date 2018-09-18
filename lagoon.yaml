@@ -3,58 +3,53 @@ version: 1.2.3
 
 lagoon:
   components:
-    lagoon-platform/aws-provider: alpha1
-    lagoon-platform/swarm-orchestrator: alpha1
+    aws:
+      repository: tbouvet/aws-provider
+      version: custom-config
+    swarm:
+      repository: tbouvet/swarm-orchestrator
+      version: proxy
+    stack1:
+      repository: lagoon-platform/swarm-orchestrator
+      version: alpha1
 
 orchestrator:
-  name: swarm
+  component: swarm
   docker:
-    log-driver: json-file
-    log-opts: 
-      max-size: "20m"
-      max-file: "3"
-    disable-legacy-registry: true
-    userland-proxy: true
-    live-restore: false
-    hosts: 
-    - "unix:///var/run/docker.sock"
-    - "tcp://0.0.0.0:2376"
-    tls: true
-    tlscacert: "/etc/docker/certs/ca.pem"
-    tlscert: "/etc/docker/certs/cert.pem"
-    tlskey: "/etc/docker/certs/key.pem"
-    tlsverify: true 
-
-  repository: lagoon-platform/swarm-orchestrator
-  
+    params:
+      log-driver: json-file
+      log-opts: 
+        max-size: "20m"
+        max-file: "3"
+      disable-legacy-registry: true
+      userland-proxy: true
+      live-restore: false
+      hosts: 
+      - "unix:///var/run/docker.sock"
+      - "tcp://0.0.0.0:2376"
+      tls: true
+      tlscacert: "/etc/docker/certs/ca.pem"
+      tlscert: "/etc/docker/certs/cert.pem"
+      tlskey: "/etc/docker/certs/key.pem"
+      tlsverify: true 
 
 providers:
   aws:
-    repository: lagoon-platform/aws-provider
+    component: aws
     params:
       region: "us-west-1"
+      
+    env:
+      AWS_REGION: {{ .aws_region }}
+      AWS_ACCESS_KEY_ID: {{ .aws_access_key_id }}
+      AWS_SECRET_ACCESS_KEY: {{ .aws_access_key }}
+
 
 nodes:
   managers:
-        
+    instances: 3        
     provider:
       name: aws
-      volumes:
-        - name: /data1
-          params:
-            device_name: xvdf
-            volume_type: gp2
-            volume_size: 9
-            delete_on_termination: true
-        - name: /var/lib/docker
-          params:
-            device_name: xvdg
-            volume_type: standard
-            volume_size: 1
-            delete_on_termination: true
-            tags:
-              Type: Docker 
-              TestTagKey: TestTagValue
       params:
         instance_type: "t2.micro"
         ami_id: "ami-f90a4880"
@@ -102,10 +97,25 @@ nodes:
             - 4789 
             cidr_ip: 0.0.0.0/0
             rule_desc: overlay network traffic 
-     
-    instances: 3
-    labels:
-      - lagoon
+    volumes:
+    - path: /data1
+      params:
+        device_name: xvdf
+        volume_type: gp2
+        volume_size: 9
+        delete_on_termination: true
+    - path: /var/lib/docker
+      params:
+        device_name: xvdg
+        volume_type: standard
+        volume_size: 1
+        delete_on_termination: true
+        tags:
+          Type: Docker 
+          TestTagKey: TestTagValue
 
-
-
+stacks:
+  stack1:
+    component: stack1
+    on:
+    - managers
