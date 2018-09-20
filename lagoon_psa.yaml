@@ -4,14 +4,14 @@ version: 1.2.3
 lagoon:
   components:
     aws:
-      repository: tbouvet/aws-provider
-      version: custom-config
+      repository: lagoon-platform/aws-provider
+      version: alpha2
     swarm:
-      repository: tbouvet/swarm-orchestrator
-      version: proxy
+      repository: lagoon-platform/swarm-orchestrator
+      version: alpha2
     stack1:
       repository: lagoon-platform/swarm-orchestrator
-      version: alpha1
+      version: alpha2
 
 orchestrator:
   component: swarm
