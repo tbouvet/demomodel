@@ -1,5 +1,5 @@
-name: testEnvironment1
-qualifier: testQualifier1
+name: testEnvironment2
+qualifier: testQualifier2
 
 lagoon:
   components:
