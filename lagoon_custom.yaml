@@ -1,17 +1,17 @@
 name: testEnvironment
-version: 1.2.3
+qualifier: testQualifier
 
 lagoon:
   components:
     aws:
       repository: lagoon-platform/aws-provider
-      version: alpha2
+      version: alpha3
     swarm:
       repository: lagoon-platform/swarm-orchestrator
-      version: alpha2
+      version: alpha3
     stack1:
       repository: lagoon-platform/swarm-orchestrator
-      version: alpha2
+      version: alpha3
 
 orchestrator:
   component: swarm
@@ -41,7 +41,6 @@ orchestrator:
         username: {{ .docker_username }}
         password: {{ .docker_password }}
 
-
 providers:
   aws:
     component: aws
@@ -51,7 +50,7 @@ providers:
     proxy:
       http_proxy: {{ .proxy_http }}
       https_proxy: {{ .proxy_https }}
-      no_proxy: {{ .proxy_no }}
+      no_proxy: "{{ .proxy_no }}"
     env:
       AWS_REGION: {{ .aws_region }}
       AWS_ACCESS_KEY_ID: {{ .aws_access_key_id }}
@@ -60,7 +59,7 @@ providers:
 
 nodes:
   managers:
-    instances: 1
+    instances: 3
     
     provider:
       name: aws
