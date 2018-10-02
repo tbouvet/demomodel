@@ -1,17 +1,17 @@
-name: testEnvironment
-version: 1.2.3
+name: testEnvironment1
+qualifier: testQualifier1
 
 lagoon:
   components:
     aws:
       repository: lagoon-platform/aws-provider
-      version: alpha2
+      version: alpha3
     swarm:
       repository: lagoon-platform/swarm-orchestrator
-      version: alpha2
+      version: alpha3
     stack1:
       repository: lagoon-platform/swarm-orchestrator
-      version: alpha2
+      version: alpha3
 
 orchestrator:
   component: swarm
