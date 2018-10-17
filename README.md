@@ -1,2 +1,2 @@
 # demomodel
-Environment descriptor used for Lagoon V3 demos
+Environment descriptor used for Ekara V3 demos
