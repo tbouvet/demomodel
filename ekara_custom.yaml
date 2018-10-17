@@ -1,16 +1,16 @@
 name: testEnvironment
 qualifier: testQualifier
 
-lagoon:
+ekara:
   components:
     aws:
-      repository: lagoon-platform/aws-provider
+      repository: ekara-platform/aws-provider
       version: alpha3
     swarm:
-      repository: lagoon-platform/swarm-orchestrator
+      repository: ekara-platform/swarm-orchestrator
       version: alpha3
     stack1:
-      repository: lagoon-platform/swarm-orchestrator
+      repository: ekara-platform/swarm-orchestrator
       version: alpha3
 
 orchestrator:
