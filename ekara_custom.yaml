@@ -5,13 +5,13 @@ ekara:
   components:
     aws:
       repository: ekara-platform/aws-provider
-      version: alpha3
+      version: alpha4
     swarm:
       repository: ekara-platform/swarm-orchestrator
-      version: alpha3
+      version: alpha4
     stack1:
       repository: ekara-platform/swarm-orchestrator
-      version: alpha3
+      version: alpha4
 
 orchestrator:
   component: swarm
