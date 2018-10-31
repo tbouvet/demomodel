@@ -1,0 +1,123 @@
+name: testOSName
+qualifier: testOSQualifier
+
+ekara:
+  components:
+    osp:
+      repository: ekara-platform/openstack-provider
+      version: alpha4
+    swarm:
+      repository: ekara-platform/swarm-orchestrator
+      version: alpha4
+    stack1:
+      repository: ekara-platform/swarm-orchestrator
+      version: alpha4
+
+orchestrator:
+  component: swarm
+  docker:
+    params:
+      log-driver: json-file
+      log-opts: 
+        max-size: "20m"
+        max-file: "3"
+      disable-legacy-registry: true
+      userland-proxy: true
+      live-restore: false
+      hosts: 
+      - "unix:///var/run/docker.sock"
+      - "tcp://0.0.0.0:2376"
+      tls: true
+      tlscacert: "/etc/docker/certs/ca.pem"
+      tlscert: "/etc/docker/certs/cert.pem"
+      tlskey: "/etc/docker/certs/key.pem"
+      tlsverify: true 
+      registry-mirrors:
+      - "https://repository.inetpsa.com/"
+      
+    registries:
+      repository.inetpsa.com:
+        certificate: {{ .repository_cert }}
+        username: {{ .docker_username }}
+        password: {{ .docker_password }}
+
+providers:
+  osp:
+    component: osp
+
+    params:	
+      config:
+        auth:
+          auth_url: 'https://helios-be.inetpsa.com:5000/v3/'
+          username: {{ .user_name }}
+          password: {{ .user_password }}
+          user_domain_name: ldap
+          project_domain_name: Default
+          project_name: BEOS0025_lagoon
+        identity_api_version: 3
+      cacert: 
+      - {{ .cert_one }}
+      - {{ .cert_two }}
+
+    proxy:
+      http_proxy: {{ .proxy_http }}
+      https_proxy: {{ .proxy_https }}
+      no_proxy: "{{ .proxy_no }}"
+
+
+nodes:
+  managers:
+    instances: 3
+    
+    provider:
+      name: osp
+      proxy:
+        http_proxy: {{ .proxy_http }}
+        https_proxy: {{ .proxy_https }}
+        no_proxy: "{{ .proxy_no }}"
+
+      params:
+        prefix_names: noreflex 
+        image: PSA_Ubuntu_16.04
+
+        private_network: beos0025_net_dev
+        public_network: L3OUT_Intranet_Safety
+        security_groups: 
+        - beos0025_sg_dev
+        - beos0025_sg_wallix
+        flavor: docker.small
+        availability_zone: be2-1
+        dns_zone: {{ .dns }}
+
+        user_data: |
+          #cloud-config    
+          chpasswd:
+            list: |
+              ubuntu:{{ .user_ubuntu }}
+              root:{{ .root_password }}
+            expire: False
+          system_info:
+            default_user:
+              name: ubuntu
+              plain_text_passwd: '{{ .user_ubuntu }}'
+              home: /home/ubuntu
+              shell: /bin/bash
+              lock_passwd: false
+              sudo: ALL=(ALL) NOPASSWD:ALL
+  
+    volumes:
+    - path: /users
+      params:
+        volume_type: CEPH-1000
+        volume_size: 5
+    - path: /var/lib/docker
+      params:
+        volume_type: CEPH-1000
+        volume_size: 10
+      
+
+stacks:
+  stack1:
+    component: stack1
+    on:
+    - managers
