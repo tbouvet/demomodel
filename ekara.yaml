@@ -9,8 +9,8 @@ ekara:
     swarm:
       repository: ekara-platform/swarm-orchestrator
       version: alpha4
-    stack1:
-      repository: ekara-platform/swarm-orchestrator
+    visualizer:
+      repository: ekara-platform/swarm-visualizer
       version: alpha4
 
 orchestrator:
@@ -115,7 +115,7 @@ nodes:
           TestTagKey: TestTagValue
 
 stacks:
-  stack1:
-    component: stack1
+  visualizer:
+    component: visualizer
     on:
     - managers
