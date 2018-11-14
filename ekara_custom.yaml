@@ -8,10 +8,11 @@ ekara:
       version: alpha4
     swarm:
       repository: ekara-platform/swarm-orchestrator
-      version: alpha4
+      version: alpha5
     stack1:
-      repository: ekara-platform/swarm-orchestrator
+       repository: ekara-platform/swarm-visualizer
       version: alpha4
+
 
 orchestrator:
   component: swarm
