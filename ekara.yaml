@@ -9,7 +9,7 @@ ekara:
     swarm:
       repository: ekara-platform/swarm-orchestrator
       version: alpha5
-    stack1:
+    visualizer:
       repository: ekara-platform/swarm-visualizer
       version: alpha4
 
@@ -37,7 +37,7 @@ providers:
   aws:
     component: aws
     params:
-      region: "us-west-1"
+      region: "eu-west-1"
       
     env:
       AWS_REGION: {{ .aws_region }}
@@ -115,7 +115,7 @@ nodes:
           TestTagKey: TestTagValue
 
 stacks:
-  stack1:
-    component: stack1
+  visualizer:
+    component: visualizer
     on:
     - managers

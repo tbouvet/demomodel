@@ -9,7 +9,7 @@ ekara:
     swarm:
       repository: ekara-platform/swarm-orchestrator
       version: alpha5
-    stack1:
+    visualizer:
        repository: ekara-platform/swarm-visualizer
       version: alpha4
 
@@ -93,6 +93,6 @@ nodes:
 
 stacks:
   stack1:
-    component: stack1
+    component: visualizer
     on:
     - managers
