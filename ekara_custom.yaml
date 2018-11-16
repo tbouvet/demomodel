@@ -11,7 +11,7 @@ ekara:
       version: alpha5
     visualizer:
        repository: ekara-platform/swarm-visualizer
-      version: alpha4
+      version: alpha5
 
 
 orchestrator:
