@@ -1,5 +1,5 @@
-name: testEnvironment3
-qualifier: testQualifier3
+name: myproject
+qualifier: dev
 
 ekara:
   components:
