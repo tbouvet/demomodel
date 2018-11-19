@@ -120,5 +120,3 @@ nodes:
 stacks:
   stack1:
     component: visualizer
-    on:
-    - managers
